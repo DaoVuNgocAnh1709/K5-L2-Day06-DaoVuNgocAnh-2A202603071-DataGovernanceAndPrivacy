@@ -1,5 +1,10 @@
 # Day 06 · Data Lab · Field-to-Release PoC (AI20K · Data Track)
 
+> **Học viên**: Đào Vũ Ngọc Anh — Mã học viên: `2A202603071`  
+> **Challenge**: Track T04 · Sensor Sync Guard (Đồng bộ Camera & IMU) — Hình thức: Cá nhân  
+> **Repository**: https://github.com/DaoVuNgocAnh1709/K5-L2-Day6-DaoVuNgocAnh-2A202603071-DataGovernanceAndPrivacy.git  
+> **Tags**: `demo-180m`, `final-24h`
+
 Starter repo cho bài lab **Data Pipeline, Privacy & Production PoC**: 14 challenge (T01–T14), một contract chung.
 Repo cung cấp **dữ liệu offline + hạ tầng dùng chung + metric chuẩn + template báo cáo** để nhóm tập trung vào phần quan trọng:
 vấn đề, baseline, thuật toán, đánh giá trung thực, human-in-the-loop và quyết định GO/HOLD/REWORK.

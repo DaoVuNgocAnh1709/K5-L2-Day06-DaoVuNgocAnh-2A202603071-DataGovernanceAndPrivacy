@@ -1,0 +1,5 @@
+ts,scope,status,canonical,reason_code,reason,owner,evidence
+2026-11-14T09:21:37+00:00,t04,GO,GO,SENSOR_SYNC_VERIFIED,"Sync verified: median residual=2.3ms, p95=4.7ms, dropout held=45 frames (1.3%)",Dao Vu Ngoc Anh (Lead Data QA),out\poc\pairs.csv
+2026-11-14T09:22:45+00:00,t04,GO,GO,SENSOR_SYNC_VERIFIED,"Sync verified: median residual=2.3ms, p95=4.7ms, dropout held=45 frames (1.3%)",Dao Vu Ngoc Anh (Lead Data QA),out\poc\pairs.csv
+2026-11-14T09:24:56+00:00,t04,GO,GO,SENSOR_SYNC_VERIFIED,"Sync verified: median residual=2.3ms, p95=4.7ms, dropout held=42 frames (1.2%)",Dao Vu Ngoc Anh (Lead Data QA),out\poc\pairs.csv
+2026-11-15T03:29:06+00:00,t04,GO,GO,SENSOR_SYNC_VERIFIED,"Sync verified: median residual=2.3ms, p95=4.7ms, dropout held=42 frames (1.2%)",Dao Vu Ngoc Anh (Lead Data QA),out\poc\pairs.csv
