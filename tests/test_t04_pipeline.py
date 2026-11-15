@@ -130,3 +130,26 @@ def test_t04_human_review_and_audit_override(tmp_path):
     assert "override_hold" in content
     assert "Dao Vu Ngoc Anh" in content
     assert "f01372" in content
+
+
+def test_t04_shock_clock_reset_recovery(tmp_path):
+    """Verifies that mid-stream camera clock reset in shock/ is repaired seamlessly."""
+    out_dir = tmp_path / "shock_test"
+    rc = runner.main([
+        "--track", "t04",
+        "--input", "fixtures/t04_sensor_sync/shock",
+        "--output", str(out_dir),
+        "--offline",
+        "--seed", "42",
+    ])
+    assert rc == 0
+
+    pred = pd.read_csv(out_dir / "pairs.csv")
+    assert len(pred) == 1200
+    assert pred["imu_t_ms"].notna().all()
+    assert pred["imu_t_ms"].is_monotonic_increasing
+
+    audit_text = (out_dir / "audit_log.jsonl").read_text(encoding="utf-8")
+    assert "clock_reset_repaired" in audit_text
+    assert "f00750" in audit_text
+

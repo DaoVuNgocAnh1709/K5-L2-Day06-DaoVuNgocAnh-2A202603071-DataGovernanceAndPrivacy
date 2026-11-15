@@ -1,21 +1,21 @@
 rank,item_id,score,reason,suggested_action,slice,evidence_path,reviewer,reviewer_decision,override_value,review_note,reviewed_at
-1,f01372,1741.333008,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-2,f01373,1735.333008,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-3,f01371,1708.0,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-4,f01374,1702.0,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-5,f01370,1674.666992,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-6,f01375,1668.666992,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-7,f01369,1641.333008,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-8,f01376,1635.333008,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-9,f01368,1608.0,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-10,f01377,1602.0,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-11,f01367,1574.666992,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-12,f01378,1568.666992,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-13,f01366,1541.333008,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-14,f01379,1535.333008,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-15,f01365,1508.0,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-16,f01380,1502.0,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-17,f01364,1474.666992,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-18,f01381,1468.666992,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-19,f01363,1441.333008,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
-20,f01382,1435.333008,imu_dropout_gap,,,fixtures/t04_sensor_sync/camera.csv,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap,2026-11-14T16:22:00Z
+1,f01372,1742.333,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+2,f01373,1734.333,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+3,f01371,1709.0,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+4,f01374,1701.0,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+5,f01370,1675.667,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+6,f01375,1667.667,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+7,f01369,1642.333,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+8,f01376,1634.333,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+9,f01368,1609.0,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+10,f01377,1601.0,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+11,f01367,1575.667,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+12,f01378,1567.667,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+13,f01366,1542.333,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+14,f01379,1534.333,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+15,f01365,1509.0,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+16,f01380,1501.0,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+17,f01364,1475.667,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+18,f01381,1467.667,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+19,f01363,1442.333,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z
+20,f01382,1434.333,imu_dropout_gap,hold,"segment=2,drift=0.0",demo/sensor_sync_demo.png,Dao Vu Ngoc Anh,reject,,Confirmed IMU hardware dropout gap (HOLD),2026-11-15T06:15:00Z

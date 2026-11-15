@@ -1,2 +1,2 @@
 member,git_author_name,git_email,role,modules_files,commit_shas,evidence_note,presenter
-Dao Vu Ngoc Anh,NgocAnhDaoVu1709,ngocanhdaovu1709@gmail.com,Solo Developer (Architecture; Algorithm; QA & Report),"configs/lab.yaml; src/pipeline.py; tests/test_t04_pipeline.py; reports/group_report.md",HEAD,Sole author and developer for Track T04 Individual PoC,yes
+Dao Vu Ngoc Anh,NgocAnhDaoVu1709,ngocanhdaovu1709@gmail.com,Solo Developer (Architecture; Algorithm; QA & Report),"configs/lab.yaml; src/pipeline.py; tests/test_t04_pipeline.py; reports/group_report.md",8c571bc,Sole author and developer for Track T04 Individual PoC,yes

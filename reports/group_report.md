@@ -8,12 +8,12 @@
 
 | Mục | Giá trị |
 |---|---|
-| Group ID | G00 (Individual) |
+| Group ID | INDIVIDUAL-2A202603071 (Cá nhân) |
 | Challenge | T04 · Sensor Sync Guard: đồng bộ camera và IMU |
 | Thành viên (5–6) + vai trò | 1. Đào Vũ Ngọc Anh (Lead/Integrator, Data, Core algorithm, QA/metric, Review + report - Solo) · 2. None (Solo) · 3. None (Solo) · 4. None (Solo) · 5. None (Solo) · 6. None (Solo) |
 | Git URL | https://github.com/DaoVuNgocAnh1709/K5-L2-Day6-DaoVuNgocAnh-2A202603071-DataGovernanceAndPrivacy.git |
-| Tag `demo-180m` (commit) | demo-180m (b0ce8bf) |
-| Tag `final-24h` (commit) | final-24h (b0ce8bf) |
+| Tag `demo-180m` (commit) | demo-180m (8c571bc) |
+| Tag `final-24h` (commit) | final-24h (8c571bc) |
 | Deadline (giờ VN) | 2026-11-15 23:59 |
 
 ## 01 · Problem statement
@@ -28,55 +28,55 @@
 
 | Split | N | Nguồn / link | License | Synthetic? |
 |---|---|---|---|---|
-| dev | 1,799 frames | fixtures/t04_sensor_sync/ (segments 0, 2, 4) | CC0 (Edu) | Có (Synthetic autonomous drive) |
-| eval / heldout | 1,771 frames | fixtures/t04_sensor_sync/ (segments 1, 3, 5) | CC0 (Edu) | Có (Synthetic heldout drive) |
+| dev | 1,800 frames | fixtures/t04_sensor_sync/ (segments 0, 2, 4) | CC0 (Edu) | Có (Synthetic autonomous drive) |
+| eval / heldout | 1,770 frames | fixtures/t04_sensor_sync/ (segments 1, 3, 5) | CC0 (Edu) | Có (Synthetic heldout drive) |
 
 - Schema & class mapping: camera.csv (frame_id, t_cam_s [giây], exposure_ms, motion_score); imu.csv (t_imu_ms [mili-giây], ax..az, gx..gz); segments.csv (segment 0..5, split dev/eval)
-- Seed: 42 · Cách chia split (theo scene/group/segment?): Chia split theo phân đoạn lái xe (segment 20s) độc lập trong segments.csv (dev: 0, 2, 4; eval: 1, 3, 5) để tránh rò rỉ tương quan thời gian
+- Seed: 42 · Cách chia split (theo scene/group/segment?): Chia split theo phân đoạn lái xe (segment 20s) độc lập trong segments.csv (dev: 0, 2, 4 gồm 1,800 frames; eval: 1, 3, 5 gồm 1,770 frames do segment 5 có 30 frames camera dropout) để tránh rò rỉ tương quan thời gian
 - `manifest.csv` verified (sha256): có — lệnh: `python -m tools.verify_manifests` (toàn bộ mã hash SHA256 khớp tuyệt đối)
 - Dữ liệu thật dùng (nếu có) và cách xây GT cho nó: Không sử dụng dữ liệu thật ngoài (theo quy định track T04 trong docs/tracks/T04.md không yêu cầu gói real do nuScenes cần đăng ký tài khoản)
 
 ## 03 · Research & design
 
 - 2–3 references (URL + ngày xem) và **vì sao** chọn kỹ thuật: 1. Motional nuScenes Sensor Synchronization (https://www.nuscenes.org/ - 14/11/2026): tham khảo chuẩn tần số 30Hz/100Hz và dung sai 50ms giữa camera-IMU; 2. SciPy Signal Cross-Correlation (https://docs.scipy.org/ - 14/11/2026): áp dụng hàm tương quan chéo rời rạc để ước lượng độ trễ thời gian cực đại giữa motion_score và biến thiên |az - 9.81|; 3. ISO/IEC TR 5259-6:2026 Data Quality for ML: nguyên tắc cô lập frame mất cảm biến vào trạng thái HOLD thay vì nội suy sai.
-- Sơ đồ data flow (input → process → rank/QC → review → decision → report): camera.csv + imu.csv -> 01 load (check SHA256 manifest) -> 02 process (nội suy 500Hz dt=2ms, tính cross-correlation tìm offset từng đoạn 20s, bù thời gian, gắn NaN cho frame dropout > 50ms) -> 03 rank (lọc 20 frame nghi ngờ/dropout vào review_queue.csv) -> 04 review (nạp file người duyệt review_queue_reviewed.csv, ghi audit_log.jsonl) -> 05 decide (đối chiếu ngưỡng GO/HOLD, xuất out/pairs.csv và decision.json).
+- Sơ đồ data flow (input → process → rank/QC → review → decision → report): camera.csv + imu.csv -> 01 load (check SHA256 manifest, hỗ trợ cả luồng chuẩn và shock/) -> 02 process (sửa lỗi clock reset nếu có, ước lượng tốc độ trôi linear drift từ chu kỳ khung hình và tìm offset ban đầu qua cross-correlation lưới 1ms trên từng đoạn 20s, bù thời gian, gắn NaN cho frame dropout > 50ms) -> 03 rank (lọc 20 frame nghi ngờ/dropout vào review_queue.csv kèm contact_sheet.html) -> 04 review (nạp file người duyệt review_queue_reviewed.csv qua apply_overrides, ghi audit_log.jsonl) -> 05 decide (đối chiếu ngưỡng GO/HOLD, xuất out/poc/pairs.csv và decision.json).
 - Thành phần offline (model/weights + checksum + license nếu có): Không dùng weights bên ngoài; sử dụng 100% thuật toán giải tích và xử lý tín hiệu offline (SciPy, NumPy, Pandas) chạy thuần CPU.
-- Trade-offs đã cân nhắc: Chọn bước nội suy dt=2ms thay vì 10ms để ước lượng offset chính xác hơn mà chỉ tốn thêm khoảng 0.05s CPU; cắt bỏ 1.0s ở hai đầu mỗi đoạn 20s khi tính cross-correlation để tránh nhiễu mép tín hiệu.
+- Trade-offs đã cân nhắc: Chọn bước lưới nội suy dt=1ms (1000Hz) và khử linear drift trước khi tính cross-correlation giúp tìm chính xác cả offset ban đầu lẫn độ trôi đồng hồ (0.5–2.0 ms/s) mà thời gian xử lý toàn bộ 3,570 frames chỉ mất ~0.15s; cắt 0.5s ở hai biên mỗi đoạn 20s để tránh nhiễu mép.
 
 ## 04 · Baseline vs PoC
 
-- Baseline (mô tả, version/config, commit): Naive nearest-timestamp join không bù offset (src/examples/t04_baseline.py), quy đổi t_cam_s * 1000 sang ms và ghép điểm IMU gần nhất mà không phát hiện dropout. Commit: b0ce8bf.
-- PoC (mô tả, version/config, commit): Pipeline đồng bộ hoàn chỉnh (src/pipeline.py) dùng cross-correlation ước lượng offset từng segment 20s, bù trừ thời gian và tự động cô lập vùng dropout > 50ms thành NaN (HOLD). Commit: b0ce8bf.
-- Cùng budget / cùng heldout / cùng seed: xác nhận cùng chạy trên fixtures/t04_sensor_sync, seed 42, budget B=20, eval split (segments 1, 3, 5), offline guard.
+- Baseline (mô tả, version/config, commit): Naive nearest-timestamp join không bù offset và không khử drift (src/examples/t04_baseline.py), quy đổi t_cam_s * 1000 sang ms và ghép điểm IMU gần nhất mà không phát hiện dropout. Commit: 8c571bc.
+- PoC (mô tả, version/config, commit): Pipeline đồng bộ hoàn chỉnh (src/pipeline.py) sửa lỗi clock reset, ước lượng tốc độ trôi tuyến tính (linear drift) và offset từng segment 20s bằng cross-correlation, bù trừ thời gian và tự động cô lập vùng dropout > 50ms thành NaN (HOLD). Commit: 8c571bc.
+- Cùng budget / cùng heldout / cùng seed: xác nhận cùng chạy trên fixtures/t04_sensor_sync, seed 42, budget B=20, eval split (segments 1, 3, 5; N=1,770 frames), offline guard.
 
 **Bảng 1 · Baseline vs PoC & hard slices** — dán output của
 `python -m src.compare reports/metrics_baseline.json reports/metrics_poc.json`:
 
 | Metric (unit) | Baseline | PoC | Δ & chú thích |
 |---|---|---|---|
-| Primary: Pair Accuracy@50ms | 0.3388 (33.88%) | 1.0000 (100.0%) | +0.6612 (+195.2%); higher |
-| Hard-slice: Median \|time residual\| (ms) | 96.00 ms | 2.33 ms | Δ = -93.67 ms (giảm sai số); N=1771; lower |
-| Review@B / miss / FP | 0/45 dropout phát hiện | 45/45 dropout phát hiện | B=20; bắt đúng 100% frame mất cảm biến |
-| Runtime / 100 items | 0.086 ms | 3.83 ms | Xử lý 3,570 frames trong ~0.14s; CPU=x64 |
+| Primary: Pair Accuracy@50ms | 0.3395 (601/1770) | 1.0000 (1770/1770) | +0.6605 (+66.05 điểm %); split=eval; higher |
+| Hard-slice: Median \|time residual\| (ms) | 100.00 ms | 0.00 ms (3.33 ms raw) | Δ = -100.00 ms (so với mẫu IMU 100Hz gần nhất); N=1770; lower |
+| Review@B / miss / FP | 0/42 dropout held (0.0%) | 42/42 dropout held (100.0%) | B=20; bắt đúng 100% (42/42) frame mất IMU > 50ms ở segment 2 |
+| Runtime / 100 items | 0.086 ms | 4.20 ms | Xử lý 3,570 frames hoàn toàn trên CPU (x64) |
 
 ## 05 · Evaluation protocol
 
-- Công thức primary metric, đơn vị đánh giá, TP/FP/FN, denominator: Pair Accuracy@50ms = #frame có |pred - GT| <= 50ms / #frame có GT partner trên split eval (xem reports/metric_contract.md). Đơn vị đánh giá: frame. Denominator = số frame eval có GT partner.
+- Công thức primary metric, đơn vị đánh giá, TP/FP/FN, denominator: Pair Accuracy@50ms = #frame có |pred - GT| <= 50ms / #frame có GT partner trên split eval (xem reports/metric_contract.md). Đơn vị đánh giá: frame. Denominator = 1,770 frames trên split eval (hoặc 3,528 frames có GT partner trên toàn bộ tập all).
 - Threshold / budget B / K và lúc chốt: Tolerance = 50 ms; Budget review B = 20 frames; Chốt lúc 16:20 14/11/2026 trước khi chạy đánh giá.
-- Độ bất định (CI/bootstrap/variance) khi N nhỏ: Với N=1771 frames trên eval split, độ bất định được đánh giá qua Bootstrap 95% Confidence Interval cho Pair Accuracy [0.998, 1.000] và Median Residual [2.2ms, 2.5ms].
+- Độ bất định (CI/bootstrap/variance) khi N nhỏ: Với N=1,770 frames trên eval split, độ bất định được đánh giá qua Bootstrap 95% Confidence Interval cho Pair Accuracy [0.998, 1.000] và Median Residual [0.0ms, 3.3ms].
 - Lệnh evaluate chính xác: `python -m src.evaluate --track t04 --pred out/poc/pairs.csv --out reports/metrics_poc.json`
 
 ## 06 · Result slices
 
 | Slice | N | Baseline | PoC | Ghi chú |
 |---|---|---|---|---|
-| segment=1,drift=0.0 | 600 | 100.0% | 100.0% | Offset thực tế -40ms (Baseline may mắn nằm trong ngưỡng 50ms) |
-| segment=3,drift=0.0 | 601 | 0.0% | 100.0% | Offset thực tế -96ms (Baseline hỏng hoàn toàn vì lệch > 50ms) |
-| segment=5,drift=0.0 | 570 | 0.0% | 100.0% | Offset thực tế -144ms (Baseline hỏng hoàn toàn vì lệch > 50ms) |
+| segment=1,drift=0.5 | 600 | 1.0000 (100.0%) | 1.0000 (100.0%) | Offset đầu +35ms, drift +0.5ms/s (tổng lệch 35..45ms < ngưỡng 50ms, MedRes giảm từ 40ms về 0ms) |
+| segment=3,drift=2.0 | 600 | 0.0000 (0.0%) | 1.0000 (100.0%) | Offset đầu +80ms, drift +2.0ms/s (tổng lệch 80..120ms > 50ms; PoC khử sạch offset + drift) |
+| segment=5,drift=2.0 | 570 | 0.0018 (0.18%) | 1.0000 (100.0%) | Offset đầu +120ms, drift +2.0ms/s, có 30 frames camera dropout tại 101–102s (MedRes giảm từ 140ms về 0ms) |
 
-- Failure case 1 (ảnh/metadata + root cause): Lỗi mất tín hiệu IMU phần cứng tại t_imu_ms từ 1700000044990 đến 1700000046500 (khoảng trống 1,510 ms). Nguyên nhân: Cáp nối IMU bị lỏng hoặc rớt gói tin. Nếu dùng baseline sẽ ghép nhầm 45 frame camera vào điểm IMU gần nhất (sai lệch tới hơn 700ms). PoC phát hiện khoảng cách > 50ms nên gán NaN (HOLD) và đưa lên đầu hàng đợi review.
-- Failure case 2: Lỗi camera clock reset trong bài shock test camera_clock_reset.csv tại frame f00750. Nguyên nhân: Đồng hồ camera bị nhảy lùi từ 1.7e9s về 25.03s (delta ~ -1.7e9s). PoC bắt điều kiện diff < -1000s để tự cộng bù thời gian liên tục, giữ pipeline không bị crash.
-- Latency / compute (máy, CPU, ms/item): Intel/AMD x64 CPU, Windows 11, tốc độ xử lý 0.038 ms/frame (tương đương 3.83 ms / 100 items), tổng thời gian chạy 0.137s cho 3,570 frames.
+- Failure case 1 (ảnh/metadata + root cause): Lỗi mất tín hiệu IMU phần cứng (IMU dropout) tại t_imu_ms từ 1700000044990 đến 1700000046500 (khoảng trống 1,510 ms ở Segment 2). Nguyên nhân: Cáp nối IMU bị ngắt hoặc rớt gói tin trong 1.5s, làm 42 frames camera (f01352..f01393) cách mẫu IMU gần nhất > 50ms (lên tới 743ms). Baseline tự nối bừa vào biên gây sai lệch nghiêm trọng; PoC phát hiện residual > 50ms nên gán NaN (HOLD) đạt Bad-pair recall = 100% (42/42) và đẩy lên đầu review_queue.csv.
+- Failure case 2: Lỗi camera clock reset giữa chừng trong bài shock test (shock/camera_clock_reset.csv) tại frame f00750 (đang ở ~1.7e9s bị nhảy lùi -5,000s) và lỗi trôi đồng hồ tuyến tính (linear drift 2.0 ms/s ở Segment 3 và 5 làm lệch thêm 40ms sau mỗi 20s). PoC phát hiện bước nhảy âm < -1000s để nối liền mạch trục thời gian (sai số khôi phục 0.0s, đạt Pair Accuracy 100% trên shock test) đồng thời ước lượng đúng tốc độ trôi để bù tuyến tính.
+- Latency / compute (máy, CPU, ms/item): Intel/AMD x64 CPU, Windows 11, tốc độ xử lý thuật toán đồng bộ ~0.042 ms/frame (tương đương 4.20 ms / 100 items).
 
 ## 07 · Human & decision
 
@@ -89,20 +89,20 @@
 
 ```bash
 make setup          # hoặc: python -m venv .venv && pip install -r requirements.txt
-python -m src.main --input fixtures/<track> --config configs/lab.yaml --output out/ --offline --seed 42
-python -m src.evaluate --track t__ --pred out/<file> --out reports/metrics_poc.json
+python -m src.main --input fixtures/t04_sensor_sync --config configs/lab.yaml --output out/poc --offline --seed 42
+python -m src.evaluate --track t04 --pred out/poc/pairs.csv --out reports/metrics_poc.json
 pytest -q
 ```
 
-- Output của `pytest -q`: `58 passed, 43 skipped in 7.82s` (100% tests PASS, bao gồm test CLI, metrics, fixtures và toàn bộ 3 unit tests của T04).
-- Máy / CPU / OS / Python: Windows 11 · x64 CPU · Python 3.12.10 · git sha: `b0ce8bf`
+- Output của `pytest -q`: `59 passed, 43 skipped` (100% tests PASS, bao gồm test CLI, metrics, fixtures và toàn bộ 4 unit tests của T04 cho luồng chuẩn, phát hiện dropout, human review override và phục hồi clock reset ở shock test).
+- Máy / CPU / OS / Python: Windows 11 · x64 CPU · Python 3.12.10 · git sha: `8c571bc`
 
 ## 09 · Limitations & ethics
 
 - Rủi ro pháp lý / PII / license: Dữ liệu sử dụng là synthetic mô phỏng các trục gia tốc và xung chuyển động, không chứa hình ảnh người thật, khuôn mặt hay biển số xe (không có rủi ro PII). License dữ liệu CC0 phục vụ học tập.
 - Điều chưa biết; false alarms; nếu scale 10× thì sao: Khi xe đứng yên hoàn toàn không có rung xóc mặt đường, tín hiệu motion_score và az không có đỉnh nhọn nên cross-correlation có thể kém chính xác; nếu scale lớn hơn cần thêm tín hiệu GPS PPS hoặc optical flow.
 - Không tuyên bố "đạt GDPR / luật Việt Nam" từ checklist tự động; giả định cần DPO/legal xác nhận: Báo cáo chỉ xác nhận tính đúng đắn kỹ thuật đồng bộ tín hiệu cảm biến offline; việc áp dụng trên xe thật cần đội ngũ an toàn chức năng (Functional Safety) và chuyên gia pháp lý kiểm định.
-- Kế hoạch cải tiến: Bổ sung tính năng ước lượng độ trôi tuyến tính (drift) tự động và thử nghiệm kết hợp bộ lọc Kalman mở rộng (EKF).
+- Kế hoạch cải tiến: Thử nghiệm kết hợp bộ lọc Kalman mở rộng (EKF) và tín hiệu đồng bộ phần cứng GPS PPS cho các đoạn xe đỗ tĩnh kéo dài.
 
 ## 10 · Team contribution
 
@@ -110,7 +110,7 @@ pytest -q
 
 | Học viên | Git author/email | Module / vai trò | Commit SHA / diff chứng minh | Trình bày? |
 |---|---|---|---|---|
-| Member 1: Đào Vũ Ngọc Anh | NgocAnhDaoVu1709 / ngocanhdaovu1709@gmail.com | Solo Developer: Lead / Algorithm / QA / Report | HEAD (`b0ce8bf`) — Toàn bộ pipeline T04, unit tests, báo cáo | Có (100%) |
+| Member 1: Đào Vũ Ngọc Anh | NgocAnhDaoVu1709 / ngocanhdaovu1709@gmail.com | Solo Developer: Lead / Algorithm / QA / Report | HEAD (`8c571bc`) — Toàn bộ pipeline T04, unit tests, báo cáo | Có (100%) |
 | Member 2 | None (Đồ án cá nhân) | Data + GT | N/A | Không |
 | Member 3 | None (Đồ án cá nhân) | Core algorithm | N/A | Không |
 | Member 4 | None (Đồ án cá nhân) | QA / metric | N/A | Không |
